@@ -34,8 +34,10 @@ kt_bootstrap_binary(
         "-D@rules_kotlin...jdeps-gen=$(rlocationpath //src/main/kotlin:jdeps-gen)",
         "-D@rules_kotlin...compiler=$(rlocationpath //src/main/kotlin/io/bazel/kotlin/compiler:compiler.jar)",
         "-D@rules_kotlin..kotlin.compiler.kotlin-reflect=$(rlocationpath //kotlin/compiler:kotlin-reflect)",
-        "-XX:-MaxFDLimit",
-    ],
+    ] + select({
+        "@platforms//os:macos": ["-XX:-MaxFDLimit"],
+        "//conditions:default": [],
+    }),
     main_class = "io.bazel.kotlin.builder.cmd.Build",
     shade_rules = "//src/main/kotlin:shade.jarjar",
     visibility = ["//src:__subpackages__"],
